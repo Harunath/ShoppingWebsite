@@ -1,15 +1,22 @@
-import { useState } from "react";
-import useCurrencyInfo from "../assets/hooks/useCurrenncyInfo";
+import { useEffect, useState } from "react";
+import useCurrencyInfo from "../hooks/useCurrenncyInfo";
+import CurrencyBox from "./CurrencyBox";
 
 function CurrencyConvertor() {
-  const [from, setFrom] = useState(0);
   const [fromCurrency, setFromCurrenncy] = useState("usd");
-  const [to, setTo] = useState(0);
+  const [fromAmount, setFromAmount] = useState(0);
   const [toCurrency, setToCurrenncy] = useState("inr");
-  console.log(useCurrencyInfo("usd"));
-  const setToAmout = () => {
-    setTo(() => from);
-  };
+  const [toAmount, setToAmount] = useState(0);
+  const currencyInfo = useCurrencyInfo(fromCurrency)
+  const options = Object.keys(currencyInfo)
+  
+  useEffect(()=>{
+    setToAmount(() => {
+      if(fromCurrency == toCurrency) return(fromAmount)
+      else return(fromAmount*currencyInfo[toCurrency])
+    })
+  },[fromAmount,toCurrency,currencyInfo,fromCurrency])
+
   return (
     <div
       className="flex flex-col justify-center items-center w-screen h-screen text-gray-500 bg-cover"
@@ -19,54 +26,8 @@ function CurrencyConvertor() {
       }}
     >
       <div className="flex flex-col gap-4 p-4 m-auto rounded-xl bg-opacity-50 bg-white">
-        <div className="flex flex-col gap-4 p-4 rounded-xl bg-gray-200">
-          <div className="flex justify-between px-4">
-            <p>From</p>
-            <p>Currency type</p>
-          </div>
-          <div className="flex justify-between gap-2 px-2">
-            <input
-              className="w-1/2 px-2 rounded-xl outline-none bg-blue-200"
-              type="number"
-              name="from"
-              min={0}
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-            />
-            <div className="flex justify-end w-1/2 rounded-xl">
-              <select
-                className="rounded-lg px-1 py-1 bg-gray-100 cursor-pointer outline-none"
-                name="currency"
-              >
-                <option value="inr">inr</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col gap-4 p-4 rounded-xl bg-gray-200">
-          <div className="flex justify-between px-4">
-            <p>To</p>
-            <p>Currency type</p>
-          </div>
-          <div className="flex justify-between gap-2 px-2">
-            <input
-              className="w-1/2 px-2 rounded-xl outline-none bg-blue-200"
-              type="number"
-              name="from"
-              min={0}
-              value={to}
-              onChange={(e) => setFrom(e.target.value)}
-            />
-            <div className="flex justify-end w-1/2 rounded-xl">
-              <select
-                className=" w-1/2 px-2 rounded-xl outline-none"
-                name="currency"
-              >
-                <option value="inr">inr</option>
-              </select>
-            </div>
-          </div>
-        </div>
+        <CurrencyBox type="From" setCurrency={(val)=> setFromCurrenncy(val)} amount={fromAmount} setAmount={(val)=>setFromAmount(val)} options={options} selected="usd"/>
+        <CurrencyBox type="To" setCurrency={(val)=> setToCurrenncy(val)} amount={toAmount} setAmount={(val)=>setToAmount(val)} options={options} selected="inr"/>
         <div className="">
           <p>Convert</p>
         </div>

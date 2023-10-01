@@ -4,11 +4,9 @@ function Counter() {
   const [counter, setCounter] = useState(0);
   const increment = () => {
     setCounter(counter + 1);
-    console.log(counter);
   };
   const decrement = () => {
     setCounter(counter - 1);
-    console.log(counter);
   };
   return (
     <div className="flex items-center w-fit p-2 space-x-2 rounded-xl bg-zinc-500">
